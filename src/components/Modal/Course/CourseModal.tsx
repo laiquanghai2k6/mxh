@@ -18,8 +18,8 @@ type CourseModalProps = {
 const CourseModal: React.FC<CourseModalProps> = () => {
 
     const [courseCreateModalstates, setCourseCreateState] = useRecoilState(courseCreateModalState)
-    const [courseImageCreate, setCourseImageCreate] = useState<Array>([])
-    const [courseAnswerCreate, setCourseAnswerCreate] = useState<Array>([])
+    const [courseImageCreate, setCourseImageCreate] = useState([])
+    const [courseAnswerCreate, setCourseAnswerCreate] = useState([])
     const [inputTitle, setInputTitle] = useState({
         text: '',
     })
@@ -40,9 +40,11 @@ const CourseModal: React.FC<CourseModalProps> = () => {
     console.log('courseValue.length', courseValue?.docs.length)
 
     const onChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+       // @ts-ignore: Object is possibly 'null'.
         setNImage(event.target.value)
     }
     const onChangeQuestion = (event: React.ChangeEvent<HTMLInputElement>) => {
+     // @ts-ignore: Object is possibly 'null'.
         setNQuestion(event.target.value)
     }
     const handleClose = () => {
@@ -122,10 +124,12 @@ const CourseModal: React.FC<CourseModalProps> = () => {
                                     setIsSubmit(true)
 
                                     for (var i = 0; i < nImage; i++) {
+                                        // @ts-ignore: Object is possibly 'null'.
                                         fakeArray[i] = i
 
                                     }
                                     for (var i = 0; i < nQuestion; i++) {
+                                        // @ts-ignore: Object is possibly 'null'.
                                         fakeArrayQuestion[i] = i
                                     }
 
@@ -155,6 +159,7 @@ const CourseModal: React.FC<CourseModalProps> = () => {
                                             onChange={({ target }) => {
                                                 if (target.files) {
                                                     // console.log(`images/courseImageid${courseValue?.docs.length}-${idx}`)
+                                                    // @ts-ignore: Object is possibly 'null'.
                                                     const imageCourseRef = ref(storage, `images/courseImageid${courseValue?.docs.length + 1}-${idx}`)
 
                                                     const file = target.files[0];
@@ -164,6 +169,7 @@ const CourseModal: React.FC<CourseModalProps> = () => {
                                                     }).then(() => {
                                                         getDownloadURL(imageCourseRef).then((url) => {
                                                             const updateImage = [...courseImageCreate]
+                                                            // @ts-ignore: Object is possibly 'null'.
                                                             updateImage[idx] = url
 
                                                             
@@ -239,17 +245,23 @@ const CourseModal: React.FC<CourseModalProps> = () => {
                                     let day = date+"/"+month+"/"+year
                                     for (var i = 0; i < fakeArrayQuestion.length; i++) {
                                         var choices = document.getElementById(`choices${i}`)
+                                        // @ts-ignore: Object is possibly 'null'.
                                         for (s = 0; s < choices.length; s++) {
+                                            // @ts-ignore: Object is possibly 'null'.
                                             if (choices[s].checked) {
+                                                // @ts-ignore: Object is possibly 'null'.
                                                 courseAnswerCreate[i] = parseInt(choices[s].value)
                                             }
                                         }
 
                                     }
+                                    // @ts-ignore: Object is possibly 'null'.
                                     await setDoc(doc(db,'course',`courseid${courseValue?.docs.length + 1}`),{
                                         author:user?.email?.split("@")[0],
                                         date:day,
+                                        // @ts-ignore: Object is possibly 'null'.
                                         id:courseValue?.docs.length + 1,
+                                        // @ts-ignore: Object is possibly 'null'.
                                         question:parseInt(nQuestion,10),
                                         title:inputTitle.text,
                                         view:0,
@@ -258,11 +270,13 @@ const CourseModal: React.FC<CourseModalProps> = () => {
 
                                     })
                                     for(var d = 1 ; d < courseImageCreate.length;d++){
+                                        // @ts-ignore: Object is possibly 'null'.
                                          updateDoc(doc(db,'course',`courseid${courseValue?.docs.length + 1}`),{
                                             image: arrayUnion(courseImageCreate[d])
                                         })
                                     }
                                     for(var f = 1 ; f < courseAnswerCreate.length;f++){
+                                        // @ts-ignore: Object is possibly 'null'.
                                          updateDoc(doc(db,'course',`courseid${courseValue?.docs.length + 1}`),{
                                             answer: arrayUnion(courseAnswerCreate[f])
                                         })

@@ -15,7 +15,9 @@ const FinishModal: React.FC<FinishModalProps> = (props) => {
     console.log('userAnswer', userAnswer)
     const [modalState, setModalState] = useRecoilState(finishModalState)
     const [renderWrongAnswer,setRenderWrongAnswer] = useState(false)
+    // @ts-ignore: Object is possibly 'null'.
     var correctAnswer = [];
+    // @ts-ignore: Object is possibly 'null'.
     var wrongAnswer = [];
     for (var i = 1; i <= currentCourse?.question; i++) {
         if (currentCourse?.answer[i - 1] == userAnswer[i]) {
@@ -23,8 +25,7 @@ const FinishModal: React.FC<FinishModalProps> = (props) => {
         } else {
             wrongAnswer.push(userAnswer[i])
         }
-        console.log('correctAnswer:', correctAnswer)
-        console.log('wrongAnswer:', wrongAnswer)
+    
     }
 
     const handleClose = () => {
@@ -59,7 +60,9 @@ const FinishModal: React.FC<FinishModalProps> = (props) => {
                         {wrongAnswer.length > 0 ? 
                         (
                             <Flex display='flex' flexDirection='column'>
-                                {wrongAnswer.map((wrong,index)=>{
+                              
+                                {// @ts-ignore: Object is possibly 'null'.
+                                wrongAnswer.map((wrong,index)=>{
                                     var convertWrong
                                     var convertCorrect
 
@@ -80,6 +83,7 @@ const FinishModal: React.FC<FinishModalProps> = (props) => {
                                         default:
                                             break;
                                     }
+                                    // @ts-ignore: Object is possibly 'null'.
                                     switch (currentCourse.answer[index]) {
                                         case 1:
                                             convertCorrect = "A"

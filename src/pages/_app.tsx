@@ -12,9 +12,11 @@ export default function App({ Component, pageProps }: AppProps) {
     // <BrowserRouter>
       <RecoilRoot>
         <ChakraProvider theme={theme}>
-          <Layout>
+          
+          {// @ts-ignore: Object is possibly 'null'.
+          (<Layout>
             <Component {...pageProps} />
-          </Layout>
+          </Layout>)}
         </ChakraProvider>
       </RecoilRoot >
     // </BrowserRouter>

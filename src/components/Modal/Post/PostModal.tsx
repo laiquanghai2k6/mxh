@@ -5,30 +5,30 @@ import { useRecoilState } from 'recoil';
 import AuthInput from '../Auth/AuthInput';
 import OAuthButton from '../Auth/OAuthButton';
 import ResetPassword from '../Auth/ResetPassword';
-import { addDoc, collection, doc, setDoc ,orderBy, query, limit} from 'firebase/firestore';
+import { addDoc, collection, doc, setDoc, orderBy, query, limit } from 'firebase/firestore';
 import { auth, db, storage } from '@/src/firebase/clientApp';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { getDownloadURL, ref, uploadBytes} from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 type PostModalProps = {
 
 };
 
 const PostModal: React.FC<PostModalProps> = () => {
-    const queryref = collection(db,"post")
+    const queryref = collection(db, "post")
     const q = query(queryref)
-  
+
 
     const [value, loading, error] = useCollection(q,
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-      
-    }
+        {
+            snapshotListenOptions: { includeMetadataChanges: true },
+
+        }
     )
-   
- 
-       
+
+
+
     const [modalState, setModalState] = useRecoilState(postModalState)
     const [inputPost, setInputPost] = useState({
         text: '',
@@ -39,7 +39,7 @@ const PostModal: React.FC<PostModalProps> = () => {
     const [imagePostUpload, setImagePostUpload] = useState<File>()
     const [imagePost, setImagePost] = useState('')
     const [user] = useAuthState(auth)
-    const [imagePostRes,setImagePostRes] = useState('')
+    const [imagePostRes, setImagePostRes] = useState('')
 
 
     const handleClose = () => {
@@ -60,7 +60,7 @@ const PostModal: React.FC<PostModalProps> = () => {
             [event.target.name]: event.target.value
         }))
     }
-    const postUploadRefs = ref(storage,`images/postid${value?.docs.length + 1}.png`)
+    // const postUploadRefs = ref(storage, `images/postid${value.docs?.length + 1}.png`)
     // console.log('value?.docs[value.docs.length -1].id:',value?.docs[value.docs.length -1].data().id)
     // console.log(value?.docs)
     return (
@@ -104,7 +104,7 @@ const PostModal: React.FC<PostModalProps> = () => {
                             name='title'
                         />
                         <Input
-                        mt={10}
+                            mt={10}
                             height='100px'
                             maxHeight='300px'
                             gridAutoColumns='2'
@@ -115,12 +115,12 @@ const PostModal: React.FC<PostModalProps> = () => {
                             name='text'
                         />
                         {imagePost && <Image
-                        mt={10}
+                            mt={10}
                             boxSize='300px'
                             src={imagePost}
                         />}
                         <div style={{ display: 'flex', flexDirection: 'row' }}>
-                           
+
                             <Button height='25px'
                                 ml={3}
                                 mt={2}
@@ -130,66 +130,70 @@ const PostModal: React.FC<PostModalProps> = () => {
                                     let date = newDate.getDate();
                                     let month = newDate.getMonth() + 1;
                                     let year = newDate.getFullYear();
-                                    let day = date+"/"+month+"/"+year
-                                    if(imagePost){
-                                       await uploadBytes(postUploadRefs, imagePostUpload).then((snapshot) => {
-                                            console.log('uploaded')
-                                            // updateDoc(postRef, { comment: arrayUnion({ user: user?.email?.split("@")[0], text: inputComment.text, image: imageComment }) })
-                                          
-                                        })
-                                        await getDownloadURL(postUploadRefs).then(async (url) => {
-                                            // console.log(value?.docs[value.docs.length -1].data())
-                                            console.log(value?.docs.length)
-                                            console.log('url',url)
-                                            await setDoc(doc(db, "post", `postid${value?.docs.length +1}`), {
-                                                author: user?.email?.split("@")[0],
-                                                comment:[],
-                                                content:inputPost.text,
-                                                date:day,
-                                                id:value?.docs.length +1,
-                                                like:0,
-                                                title:titlePost.title,
-                                                imagePost:url
-                                             })
+                                    let day = date + "/" + month + "/" + year
+                                    if (imagePost) {
+                                        if (imagePostUpload && value) {
+                                            await uploadBytes(ref(storage, `images/postid${value.docs?.length + 1}.png`), imagePostUpload).then((snapshot) => {
+                                                console.log('uploaded')
+                                                // updateDoc(postRef, { comment: arrayUnion({ user: user?.email?.split("@")[0], text: inputComment.text, image: imageComment }) })
 
-                                             
-                                        })
-                                    }else{
-                                      
-                                            await setDoc(doc(db, "post", `postid${value?.docs.length +1}`), {
-                                                author: user?.email?.split("@")[0],
-                                                comment:[],
-                                                content:inputPost.text,
-                                                date:day,
-                                                id:value?.docs.length +1,
-                                                like:0,
-                                                title:titlePost.title,
-                                                imagePost:''
-                                             })
+                                            })
+                                        }
+                                        if (value) {
+                                            await getDownloadURL(ref(storage, `images/postid${value.docs?.length + 1}.png`)).then(async (url) => {
+                                                // console.log(value?.docs[value.docs.length -1].data())
 
-                                             
-                                        
+                                                await setDoc(doc(db, "post", `postid${value.docs?.length + 1}`), {
+                                                    author: user?.email?.split("@")[0],
+                                                    comment: [],
+                                                    content: inputPost.text,
+                                                    date: day,
+                                                    id: value.docs?.length + 1,
+                                                    like: 0,
+                                                    title: titlePost.title,
+                                                    imagePost: url
+                                                })
+
+                                            }
+                                            )
+                                        }
+
+                                    } else {
+                                        if (value) {
+                                            await setDoc(doc(db, "post", `postid${value.docs?.length + 1}`), {
+                                                author: user?.email?.split("@")[0],
+                                                comment: [],
+                                                content: inputPost.text,
+                                                date: day,
+                                                id: value.docs?.length + 1,
+                                                like: 0,
+                                                title: titlePost.title,
+                                                imagePost: ''
+                                            })
+
+                                        }
+
                                     }
-                                        
+
                                     setModalState((prev) => ({
                                         ...prev,
                                         open: false
                                     }))
                                     console.log('added Doc')
 
-                                
+
 
                                 }}
 
                             >Gửi</Button>
-                             <label htmlFor="filePicker" style={{ fontSize: '10px', width: '100px',marginLeft:'30px'  }}>
-                             <Image
-                                height='25px' src='/images/camera.png'
-                                ml={3}
-                                mt={2}
-                            />
+                            <label htmlFor="filePicker" style={{ fontSize: '10px', width: '100px', marginLeft: '30px' }}>
+                                <Image
+                                    height='25px' src='/images/camera.png'
+                                    ml={3}
+                                    mt={2}
+                                />
                             </label>
-                            <input id="filePicker" style={{  visibility: "hidden", width: '1px'  }} type={"file"}
+                            <input id="filePicker" style={{ visibility: "hidden", width: '1px' }} type={"file"}
 
                                 onChange={({ target }) => {
                                     if (target.files) {
@@ -208,7 +212,7 @@ const PostModal: React.FC<PostModalProps> = () => {
                     </Flex>
                 </ModalBody>
             </ModalContent>
-        </Modal>
+        </Modal >
     )
 }
 export default PostModal;

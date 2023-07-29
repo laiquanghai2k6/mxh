@@ -18,6 +18,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/firebase/clientApp.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/firebase/clientApp.ts", "src/components/Modal/Auth/SignUp.js"],
   "exclude": ["node_modules"]
 }

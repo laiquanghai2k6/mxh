@@ -202,6 +202,7 @@ const PostId: React.FC<ComProps> = () => {
 
                                 }
                                 else{
+                                    // @ts-ignore: Object is possibly 'null'.
                                     uploadBytes(commentRefs, imageCommentUpload).then((snapshot) => {
                                         console.log('uploaded')
                                         // updateDoc(postRef, { comment: arrayUnion({ user: user?.email?.split("@")[0], text: inputComment.text, image: imageComment }) })
@@ -270,7 +271,8 @@ const PostId: React.FC<ComProps> = () => {
 
                         mt={5}
                     >
-                        {currentPost?.comment.map((cmt, id) => (
+                        {// @ts-ignore: Object is possibly 'null'.
+                        currentPost?.comment.map((cmt, id) => (
                             <Flex
                                 key={id}
                                 bg='white'

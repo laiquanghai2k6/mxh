@@ -24,10 +24,10 @@ const SignUp: React.FC = () => {
 
     ] = useCreateUserWithEmailAndPassword(auth)
     const [valueUser] = useCollection(collection(db, 'user'),
-    {
-      snapshotListenOptions: { includeMetadataChanges: true },
-    });
-    console.log('valueUser?.docs.length')
+        {
+            snapshotListenOptions: { includeMetadataChanges: true },
+        });
+
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -38,17 +38,24 @@ const SignUp: React.FC = () => {
         }
 
 
-        console.log(auth)
+
         createUserWithEmailAndPassword(signUpForm.email, signUpForm.password)
-        setDoc(doc(db,'user',`userid${valueUser?.docs.length+1}`),{
-            born:"",
-            email:signUpForm.email,
-            id:valueUser?.docs.length+1,
-            image:"",
-            live:"",
-            name:"",
-            password:signUpForm.password
-        })
+
+        if (valueUser) {
+            if (valueUser.docs.find((doc, id) => doc.data().email == signUpForm.email)) {
+
+            } else {
+                setDoc(doc(db, 'user', `userid${valueUser.docs?.length + 1 ? valueUser.docs?.length + 1 : ''}`), {
+                    born: "",
+                    email: signUpForm.email,
+                    id: valueUser.docs?.length + 1,
+                    image: "",
+                    live: "",
+                    name: "",
+                    password: signUpForm.password
+                })
+            }
+        }
     }
 
 
@@ -132,6 +139,7 @@ const SignUp: React.FC = () => {
             {/* {(error || userError)  && ( */}
             <Text textAlign='center' color='red' fontSize='10pt'>
                 {error || FIREBASE_ERRORS[userError?.message as keyof typeof FIREBASE_ERRORS]}
+
             </Text>
 
             {/* )} */}
