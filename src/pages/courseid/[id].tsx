@@ -2,7 +2,7 @@ import { finishModalState } from '@/src/atoms/authModalAtom';
 import FinishModal from '@/src/components/Modal/Finish/FinishModal';
 import { auth, db } from '@/src/firebase/clientApp';
 import { Button, Flex, Image, Input, Select, Stack, Text } from '@chakra-ui/react';
-import { collection, orderBy, query } from 'firebase/firestore';
+import { collection, doc, orderBy, query, updateDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -182,7 +182,7 @@ const CourseId: React.FC<CourseIdProps> = () => {
                     {indexAnswer == currentCourse?.question - 1 && (
                         <Button
                             onClick={() => {
-
+                               
                                 var b
 
                                 var choices = document.getElementById('choices')
@@ -208,7 +208,11 @@ const CourseId: React.FC<CourseIdProps> = () => {
 
 
                                 // setIndexAnswer(indexAnswer+1)
+                                updateDoc(doc(db,'course',`courseid${currentCourse?.id }`),{
+                                        // @ts-ignore: Object is possibly 'null'.
 
+                                    view:currentCourse.view+1
+                                })
                                 setModalState({ open: true })
 
                             }}
