@@ -17,7 +17,7 @@ const AuthButton:React.FC = () => {
              mr={2}
              onClick={()=>
                 setAuthModalState({open:true,view:'login'})}
-             >Log in</Button>
+             >Đăng nhập</Button>
             <Button
                height='28px'
                 display={{base:'none' , sm:'flex'}}
@@ -25,7 +25,7 @@ const AuthButton:React.FC = () => {
                 mr={2}
                 onClick={()=>setAuthModalState({open:true,view:'signup'})}
             
-            >Sign up</Button>
+            >Đăng ký</Button>
 
         </>
     )

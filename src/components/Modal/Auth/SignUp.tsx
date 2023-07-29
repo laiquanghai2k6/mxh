@@ -3,8 +3,10 @@ import { Input, Button, Flex, Text } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
-import { auth } from '../../../firebase/clientApp'
+import { auth, db } from '../../../firebase/clientApp'
 import { FIREBASE_ERRORS } from '../../../firebase/errors'
+import { collection, doc, setDoc } from 'firebase/firestore';
+import { useCollection } from 'react-firebase-hooks/firestore';
 const SignUp: React.FC = () => {
 
     const setAuthModalState = useSetRecoilState(authModalState);
@@ -21,18 +23,32 @@ const SignUp: React.FC = () => {
         userError,
 
     ] = useCreateUserWithEmailAndPassword(auth)
+    const [valueUser] = useCollection(collection(db, 'user'),
+    {
+      snapshotListenOptions: { includeMetadataChanges: true },
+    });
+    console.log('valueUser?.docs.length')
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         if (error) setError('')
         if (signUpForm.password !== signUpForm.confirmPassword) {
-            setError('Password khong giong')
+            setError('Mật khẩu xác nhận không khớp')
             return;
         }
 
 
         console.log(auth)
         createUserWithEmailAndPassword(signUpForm.email, signUpForm.password)
+        setDoc(doc(db,'user',`userid${valueUser?.docs.length+1}`),{
+            born:"",
+            email:signUpForm.email,
+            id:valueUser?.docs.length+1,
+            image:"",
+            live:"",
+            name:"",
+            password:signUpForm.password
+        })
     }
 
 
@@ -52,7 +68,7 @@ const SignUp: React.FC = () => {
             <Input
                 required
                 name='email'
-                placeholder='email'
+                placeholder='Email'
                 type='email'
                 mb={2}
                 onChange={onChange}
@@ -74,7 +90,7 @@ const SignUp: React.FC = () => {
             />
             <Input
                 name='password'
-                placeholder='password'
+                placeholder='Mật khẩu'
                 type='password'
                 mb={2}
                 fontSize='10pt'
@@ -94,7 +110,7 @@ const SignUp: React.FC = () => {
                 onChange={onChange} />
             <Input
                 name='confirmPassword'
-                placeholder='confirm Password'
+                placeholder='Xác nhận mật khẩu'
                 type='password'
                 mb={2}
                 onChange={onChange}
@@ -122,17 +138,17 @@ const SignUp: React.FC = () => {
             <Button type='submit' width='100%'
                 height='36px' mt={2} mb={2} isLoading={loading}
             >
-                SignUp
+                Đăng ký
             </Button>
             <Flex fontSize='9pt' justifyContent='center'>
-                <Text mr={1}>Already have account?</Text>
+                <Text mr={1}>Có tài khoản rồi?</Text>
                 <Text color='blue.500' fontWeight={700}
                     cursor='pointer'
                     onClick={() => setAuthModalState((prev) => ({
                         ...prev,
                         view: 'login'
                     }))}
-                >LOG IN</Text>
+                >Đăng nhập</Text>
             </Flex>
         </form>
     )

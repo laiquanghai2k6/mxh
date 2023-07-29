@@ -28,8 +28,8 @@ const AuthModal: React.FC = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader textAlign='center'>
-            {modalState.view === 'login' && 'Login'}
-            {modalState.view === 'signup' && 'Signup'}
+            {modalState.view === 'login' && 'Đăng nhập'}
+            {modalState.view === 'signup' && 'Đăng ký'}
             {modalState.view === 'resetPassword' && 'Reset Password'}
 
           </ModalHeader>
@@ -49,13 +49,13 @@ const AuthModal: React.FC = () => {
             >
               {modalState.view === 'login' || modalState.view === 'signup' ? (
                   <>
-                  <OAuthButton />
-                  <Text color='gray.500' fontWeight={700}>OR</Text>
+                  {/* <OAuthButton /> */}
+     
                   <AuthInput />
                   </>
               ) : ( <ResetPassword/> )}
             
-              <Text color='gray.500' fontWeight={700}>OR</Text>
+     
              
             </Flex>
           </ModalBody>
