@@ -17,7 +17,7 @@ const ListModal:React.FC<ListModalProps> = () => {
         }))
     }
     return(
-       
+       <></>
     )
 }
 export default ListModal;

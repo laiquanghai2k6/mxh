@@ -101,7 +101,7 @@ const FinishModal: React.FC<FinishModalProps> = (props) => {
                                    return (
                                     <Flex
                                     display='flex'
-                                    flexDirection='row'
+                                    flexDirection='row' key={index}
                                     >
                                         <Text>Câu {index+1}: Bạn chọn đáp án {convertWrong}, Đáp án đúng là {convertCorrect}</Text>
                                     </Flex>
