@@ -32,9 +32,6 @@ const CourseId: React.FC<CourseIdProps> = () => {
     const currentCourse = courseValue?.docs.find(course => course.data().id == route.query.id)?.data()
 
 
-    console.log('currentCourse: ', currentCourse)
-    console.log('indexImage:', indexImage)
-    console.log('currentCourse?.image[indexImage]:', currentCourse?.image[indexImage])
     return (
         <Flex display='flex' justify='center' mt={10}>
             <Flex display='flex' flexDirection='column'>
@@ -113,16 +110,13 @@ const CourseId: React.FC<CourseIdProps> = () => {
                     }}><label >
 
                             A <input type="radio" id="A" name="fav" value={1}
-                                onSelect={() => { console.log('A') }}
                             /></label>
                         <label >
                             B <input type="radio" id="B" name="fav" value={2}
-                                onSelect={() => { console.log('B') }}
                             />
                         </label>
                         <label >
                             C <input type="radio" id="C" name="fav" value={3}
-                                onSelect={() => { console.log('C') }}
                             />
                         </label>
                         <label >
@@ -141,7 +135,6 @@ const CourseId: React.FC<CourseIdProps> = () => {
                             if (indexAnswer <= currentCourse?.question - 2) {
                                 var s
                                 var choices = document.getElementById('choices')
-                                console.log(choices)
                                 // @ts-ignore: Object is possibly 'null'.
                                 for (s = 0; s < choices.length; s++) {
                                     // @ts-ignore: Object is possibly 'null'.

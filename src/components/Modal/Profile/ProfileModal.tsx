@@ -43,7 +43,6 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
 
 
     }
-    console.log('textProfile.image',textProfile.image)
 
 
     return (

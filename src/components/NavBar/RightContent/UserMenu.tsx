@@ -28,7 +28,6 @@ const UserMenu: React.FC<UserMenuProps> = () => {
     const [user] = useAuthState(auth)
     const [profileModalStates, setProfileModalState] = useRecoilState(profileModalState)
     const currentUserDoc = valueUser?.docs.find((doc)=>doc.data().email == user?.email)
-    console.log('currentUserDoc:',currentUserDoc?.data().image)
 
 
     return (

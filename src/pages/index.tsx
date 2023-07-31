@@ -1,4 +1,4 @@
-import { Button, Divider, Flex, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react'
+import { Button, Divider, Flex, Image, Input, InputGroup, InputLeftElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react'
 import { getDatabase } from 'firebase/database'
 import { useCollection, } from 'react-firebase-hooks/firestore'
 import { auth, db } from '../firebase/clientApp'
@@ -13,6 +13,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import ProfileModal from '../components/Modal/Profile/ProfileModal'
 import ListModal from '../components/Modal/List/ListModal'
 import { useState } from 'react'
+import { SearchIcon } from '@chakra-ui/icons'
 
 const database = getDatabase();
 // const inter = Inter({ subsets: ['latin'] })
@@ -23,26 +24,46 @@ export default function Home() {
   const q = query(queryref, orderBy("id", "desc"))
   const queryCourseRef = collection(db, 'course')
   const qCourse = query(queryCourseRef, orderBy("id", "desc"))
-  const [courseValue] = useCollection(qCourse, {
+  const [courseValues] = useCollection(qCourse, {
     snapshotListenOptions: { includeMetadataChanges: true },
   })
   const [user] = useAuthState(auth)
-  console.log('coursevalue: ', courseValue)
+
   const [value] = useCollection(q,
     {
       snapshotListenOptions: { includeMetadataChanges: true },
     });
+  const [courseFilter, setCourseFilter] = useState({
+    text: ''
+  })
   const [postModalStates, setPostModalState] = useRecoilState(postModalState);
   const [courseCreateModalstates, setCourseCreateState] = useRecoilState(courseCreateModalState)
   const [valueUser] = useCollection(collection(db, 'user'),
     {
       snapshotListenOptions: { includeMetadataChanges: true },
     });
-    const [listIndex,setListIndex] = useState(0)
+  const [listIndex, setListIndex] = useState(0)
   const home = useRecoilValue(homeNavigation)
   const [listModalStates, setListModalState] = useState(false)
 
   const [post, setPost] = useRecoilState(PostState)
+  // @ts-ignore: Object is possibly 'null'.
+  const courseValue = courseValues?.docs.filter(course => course.data().title.toLowerCase().includes(courseFilter.text))
+  // @ts-ignore: Object is possibly 'null'.
+  const onChangeFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCourseFilter(prev => ({
+      ...prev,
+      [event.target.name]: event.target.value
+    }))
+  // @ts-ignore: Object is possibly 'null'.
+    
+    // console.log('courseValues',courseValue[1].data())
+
+
+  }
+
+
+
 
 
   return (
@@ -62,13 +83,16 @@ export default function Home() {
             justifyContent: 'center',
             alignItems: 'center',
             alignSelf: 'center',
-            display: 'flex'
+            display: 'flex',
+            // overflow: 'scroll',
+
           }}>
+
             <Button mt={10}
               onClick={() => {
-                if(user){
-                setPostModalState({ open: true })
-                }else{
+                if (user) {
+                  setPostModalState({ open: true })
+                } else {
                   alert('Vui lòng đăng nhập')
                 }
               }}
@@ -132,7 +156,6 @@ export default function Home() {
                           }}
 
                           onClick={() => {
-                            console.log('doc.data().id:', doc.data().id)
                             setPost({
                               author: doc.data().author,
                               comment: doc.data().comment,
@@ -213,143 +236,186 @@ export default function Home() {
                 fontWeight={800}
               >Những người đang online</Text>
               {valueUser?.docs.map((user, id) => {
-               
-              return(
-                <Flex key={id} display='flex' flexDirection='row' bg='white'
-                  mt={3} mb={1} borderRadius='10px' padding='5px'
-                  cursor='pointer' align='center'
-                  ml={2}
-                  mr={2}
-                  _hover={{
-                    bg: 'gray.100'
-                  }}
-                  onClick={() => {
-                    setListModalState(true)
-                    setListIndex(id)
-                  }}
-                >
-                  <div>
-                  {listModalState && (
-                    <Modal isOpen={listModalStates} onClose={() => { setListModalState(false) }} >
-                      <ModalContent>
-                        <ModalHeader textAlign='center'
+
+                return (
+                  <Flex key={id} display='flex' flexDirection='row' bg='white'
+                    mt={3} mb={1} borderRadius='10px' padding='5px'
+                    cursor='pointer' align='center'
+                    ml={2}
+                    mr={2}
+                    _hover={{
+                      bg: 'gray.100'
+                    }}
+                    onClick={() => {
+                      setListModalState(true)
+                      setListIndex(id)
+                    }}
+                  >
+                    <div>
+                      {listModalState && (
+                        <Modal isOpen={listModalStates} onClose={() => { setListModalState(false) }} >
+                          <ModalContent>
+                            <ModalHeader textAlign='center'
 
 
-                        >
-                          
-                          <Flex display='flex' flexDirection='column' >
-                              <Flex justify='center'>
-                              <Image
-                                src={valueUser.docs[listIndex]?.data().image ? valueUser.docs[listIndex]?.data().image : 'https://www.pngarts.com/files/10/Default-Profile-Picture-Transparent-Image.png'}
-                                boxSize='15vh'
-                                borderRadius={50}
-                              />
+                            >
+
+                              <Flex display='flex' flexDirection='column' >
+                                <Flex justify='center'>
+                                  <Image
+                                    src={valueUser.docs[listIndex]?.data().image ? valueUser.docs[listIndex]?.data().image : 'https://www.pngarts.com/files/10/Default-Profile-Picture-Transparent-Image.png'}
+                                    boxSize='15vh'
+                                    borderRadius={50}
+                                  />
+                                </Flex>
+                                <Flex fontWeight='700' justify='center' mt={5} display='flex' flexDirection='row' fontSize={16}>
+
+                                  <Text >Tên: {valueUser.docs[listIndex]?.data().name ? valueUser.docs[listIndex]?.data().name : '(Chưa có)'} </Text>
+
+                                </Flex>
+                                <Flex fontWeight='700' justify='center' mt={5} fontSize={16}>
+
+
+                                  <Text>Năm sinh: {valueUser.docs[listIndex]?.data().born ? valueUser.docs[listIndex]?.data().born : '(Chưa có)'} </Text>
+
+                                </Flex>
+                                <Flex fontWeight='700' justify='center' mt={5} fontSize={16}>
+
+                                  <Text>Nơi ở: {valueUser.docs[listIndex]?.data().live ? valueUser.docs[listIndex]?.data().live : '(Chưa có)'} </Text>
+
+                                </Flex>
+
+
                               </Flex>
-                              <Flex fontWeight='700' justify='center' mt={5} display='flex' flexDirection='row' fontSize={16}>
 
-                                <Text >Tên: {valueUser.docs[listIndex]?.data().name ? valueUser.docs[listIndex]?.data().name : '(Chưa có)'} </Text>
-
-                              </Flex>
-                              <Flex fontWeight='700' justify='center' mt={5} fontSize={16}>
-
-
-                                <Text>Năm sinh: {valueUser.docs[listIndex]?.data().born ? valueUser.docs[listIndex]?.data().born : '(Chưa có)'} </Text>
-
-                              </Flex>
-                              <Flex fontWeight='700' justify='center' mt={5} fontSize={16}>
-
-                                <Text>Nơi ở: {valueUser.docs[listIndex]?.data().live ? valueUser.docs[listIndex]?.data().live : '(Chưa có)'} </Text>
-
-                              </Flex>
+                            </ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody
+                              display='flex'
+                              flexDirection='column'
+                              alignItems='center'
+                              justifyContent='center'
+                              pb={6}
+                            >
 
 
-                            </Flex>
-
-                        </ModalHeader>
-                        <ModalCloseButton />
-                        <ModalBody
-                            display='flex'
-                            flexDirection='column'
-                            alignItems='center'
-                            justifyContent='center'
-                            pb={6}
-                        >
-                          
 
 
-                          
 
-                        </ModalBody>
-                      </ModalContent>
-                    </Modal>
-                  )}
-                  </div>
+                            </ModalBody>
+                          </ModalContent>
+                        </Modal>
+                      )}
+                    </div>
 
-                  <Image height='35px' width='35px' src={user.data().image ? user.data().image : 'https://www.pngarts.com/files/10/Default-Profile-Picture-Transparent-Image.png'}
-                    borderRadius='100px'
+                    <Image height='35px' width='35px' src={user.data().image ? user.data().image : 'https://www.pngarts.com/files/10/Default-Profile-Picture-Transparent-Image.png'}
+                      borderRadius='100px'
 
-                  />
-                  <Flex ml={3}>{user.data().email.split("@")[0]}</Flex>
-                  <Image
-                    src='https://th.bing.com/th/id/R.13284e9be62bd8ff1ad9afac1f1fbe60?rik=5wa7bTdun3cFXQ&riu=http%3a%2f%2fgetwallpapers.com%2fwallpaper%2ffull%2f1%2ff%2fa%2f787954-green-background-wallpaper-2560x1440-cell-phone.jpg&ehk=NlHlCXUgO4xLEvkAsU9G7E4%2fgSbdaaasgeToXQGiNhI%3d&risl=&pid=ImgRaw&r=0'
-                    height='10px'
-                    width='10px'
-                    marginLeft='50px'
-                    borderRadius='100px'
-                  />
-                </Flex>
-              )})}
+                    />
+                    <Flex ml={3}>{user.data().email.split("@")[0]}</Flex>
+                    <Image
+                      src='https://th.bing.com/th/id/R.13284e9be62bd8ff1ad9afac1f1fbe60?rik=5wa7bTdun3cFXQ&riu=http%3a%2f%2fgetwallpapers.com%2fwallpaper%2ffull%2f1%2ff%2fa%2f787954-green-background-wallpaper-2560x1440-cell-phone.jpg&ehk=NlHlCXUgO4xLEvkAsU9G7E4%2fgSbdaaasgeToXQGiNhI%3d&risl=&pid=ImgRaw&r=0'
+                      height='10px'
+                      width='10px'
+                      marginLeft='50px'
+                      borderRadius='100px'
+                    />
+                  </Flex>
+                )
+              })}
 
             </Flex>
 
           </div>
         </>
       ) : (
-        <Flex display='flex' flexDirection='column'
+        <Flex
+          display='flex' flexDirection='column'
           width='100%'
           height='90%'
           top={36}
           bottom={0}
-          position='fixed'
-          // border="1px solid red"
-          overflowY='scroll'
-        // justify='center'
+        // position='fixed'
+        // overflowY='scroll'
 
-        // justifyContent='center'
-        // alignItems= 'center'
 
         >
-          <Button style={{
-            alignSelf: 'center',
-            marginBottom: '10px'
-          }}
-            onClick={() => {
-              if (user) {
-                setCourseCreateState({ open: true })
-              } else {
-                alert('Vui lòng đăng nhập')
-
-
-              }
-            }}
+          <Flex
+            ml='40vh'
+            mr='40vh'
+            mt={10}
           >
-            {/* <modal */}
-            <Image
-              height='20px'
-              src='images/plus.png'
-              paddingRight='10px'
-            />
-            Tạo khóa học
-          </Button>
+            <InputGroup>
+              <InputLeftElement pointerEvents='none'>
+                <SearchIcon color='gray.400' mb={1} />
+              </InputLeftElement>
+              <Input
+                placeholder='Tìm kiếm khóa học'
+                fontSize='10pt'
+                _placeholder={{ color: 'gray.500' }}
+                _hover={{
+                  bg: 'white',
+                  border: '1px solid',
+                  borderColor: 'blue.500',
+                }}
+                _focus={{
+                  outline: 'none',
+                  border: '1px solid',
+                  borderColor: 'blue.500',
+                }}
+                height='34px'
+                bg='gray.50'
+                name='text'
+                onChange={onChangeFilter}
+              />
+            </InputGroup>
+          </Flex>
+          <div
+          
+          style={{
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            alignSelf: 'center',
+            display: 'flex',
+          }}
+          >
+            <Button
+              mt={10}
+              style={{
+
+                alignSelf: 'center',
+                marginBottom: '10px'
+              }}
+              onClick={() => {
+                if (user) {
+                  setCourseCreateState({ open: true })
+                } else {
+                  alert('Vui lòng đăng nhập')
+
+
+                }
+              }}
+            >
+              {/* <modal */}
+              <Image
+
+                height='20px'
+                src='images/plus.png'
+                paddingRight='10px'
+              />
+              Tạo khóa học
+            </Button>
+          </div>
           <CourseModal />
 
-          {courseValue?.docs.map((course, id) => {
+          {courseValue?.map((course, id) => {
             var idCourse = `/courseid/${course.data().id}`
 
             return (
 
               <Flex key={id} ml={15} bg='green' mb={10}
-
+                // mt={20}
                 borderRadius='100px'
                 marginLeft={20}
                 marginRight={20}
@@ -392,9 +458,9 @@ export default function Home() {
                   }}
                 >
 
-                  <Flex ml={5}  >{course.data().id}      {course.data().title}</Flex>
+                  <Flex ml={5} width='60%'  >ID: {course.data().id} Tên:  {course.data().title}</Flex>
 
-                  <Flex ml={500}  >Số lượt làm: {course.data().view}</Flex>
+                  <Flex ml={5}  >Số lượt làm: {course.data().view}</Flex>
                   <Flex ml={10}>Tạo bởi {course.data().author} vào ngày {course.data().date}</Flex>
 
 
@@ -407,6 +473,7 @@ export default function Home() {
           }
 
           )}
+
         </Flex>
 
       )

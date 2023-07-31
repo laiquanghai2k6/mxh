@@ -37,7 +37,6 @@ const CourseModal: React.FC<CourseModalProps> = () => {
     const [nImage, setNImage] = useState(0)
     const [nQuestion, setNQuestion] = useState(0)
     const [isSubmit, setIsSubmit] = useState(false)
-    console.log('courseValue.length', courseValue?.docs.length)
 
     const onChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
        // @ts-ignore: Object is possibly 'null'.
@@ -64,9 +63,6 @@ const CourseModal: React.FC<CourseModalProps> = () => {
             [event.target.name]: event.target.value
         }))
     }
-    console.log(inputTitle)
-    console.log('courseAnswerCreate', courseAnswerCreate)
-    console.log('courseCreateImage:', courseImageCreate)
 
 
     return (
@@ -158,7 +154,6 @@ const CourseModal: React.FC<CourseModalProps> = () => {
 
                                             onChange={({ target }) => {
                                                 if (target.files) {
-                                                    // console.log(`images/courseImageid${courseValue?.docs.length}-${idx}`)
                                                     // @ts-ignore: Object is possibly 'null'.
                                                     const imageCourseRef = ref(storage, `images/courseImageid${courseValue?.docs.length + 1}-${idx}`)
 
@@ -188,7 +183,6 @@ const CourseModal: React.FC<CourseModalProps> = () => {
                                             }
 
                                             }
-                                            onClick={() => { console.log(idx) }}
                                         ></input>
 
                                         <Image
@@ -214,16 +208,13 @@ const CourseModal: React.FC<CourseModalProps> = () => {
                                         }}><label >
 
                                                 A <input type="radio" id="A" name="fav" value={1}
-                                                    onSelect={() => { console.log('A') }}
                                                 /></label>
                                             <label >
                                                 B <input type="radio" id="B" name="fav" value={2}
-                                                    onSelect={() => { console.log('B') }}
                                                 />
                                             </label>
                                             <label >
                                                 C <input type="radio" id="C" name="fav" value={3}
-                                                    onSelect={() => { console.log('C') }}
                                                 />
                                             </label>
                                             <label >

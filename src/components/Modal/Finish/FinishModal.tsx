@@ -12,7 +12,6 @@ type FinishModalProps = {
 
 const FinishModal: React.FC<FinishModalProps> = (props) => {
     const { currentCourse, userAnswer } = props
-    console.log('userAnswer', userAnswer)
     const [modalState, setModalState] = useRecoilState(finishModalState)
     const [renderWrongAnswer,setRenderWrongAnswer] = useState(false)
     // @ts-ignore: Object is possibly 'null'.

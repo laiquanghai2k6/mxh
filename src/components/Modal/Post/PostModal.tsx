@@ -60,9 +60,6 @@ const PostModal: React.FC<PostModalProps> = () => {
             [event.target.name]: event.target.value
         }))
     }
-    // const postUploadRefs = ref(storage, `images/postid${value.docs?.length + 1}.png`)
-    // console.log('value?.docs[value.docs.length -1].id:',value?.docs[value.docs.length -1].data().id)
-    // console.log(value?.docs)
     return (
         <Modal isOpen={modalState.open} onClose={handleClose} >
             <ModalOverlay />
@@ -141,7 +138,6 @@ const PostModal: React.FC<PostModalProps> = () => {
                                         }
                                         if (value) {
                                             await getDownloadURL(ref(storage, `images/postid${value.docs?.length + 1}.png`)).then(async (url) => {
-                                                // console.log(value?.docs[value.docs.length -1].data())
 
                                                 await setDoc(doc(db, "post", `postid${value.docs?.length + 1}`), {
                                                     author: user?.email?.split("@")[0],

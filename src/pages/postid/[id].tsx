@@ -27,10 +27,8 @@ const PostId: React.FC<ComProps> = () => {
     // const currentPost = useRecoilValue(PostState)
     const [user] = useAuthState(auth)
     const route = useRouter()
-    console.log('route.query.id: ', route.query.id)
     const currentPost = value?.docs.find(doc => doc.data().id == route.query.id)?.data()
     const postRef = doc(db, 'post', 'postid' + currentPost?.id);
-    //  console.log('currentPostss', currentPostss?.content)
     const [listModalStates, setListModalState] = useState(false)
     const [listIndex,setListIndex] = useState(0)
 
@@ -51,7 +49,6 @@ const PostId: React.FC<ComProps> = () => {
 
     }
 
-    // console.log('postRef',postRef)
     const commentRefs = ref(storage, `images/commentid${currentPost?.comment.length}.png`)
 
     // getDownloadURL(postRefs).then((url) => {
@@ -218,7 +215,6 @@ const PostId: React.FC<ComProps> = () => {
                                                 text: ''
                                             }))
                                             setImageComment('')
-                                            console.log(inputComment)
 
                                         })
                                     })
@@ -246,7 +242,6 @@ const PostId: React.FC<ComProps> = () => {
                                     const file = target.files[0];
                                     setImageComment(URL.createObjectURL(file))
                                     setImageCommentUpload(file)
-                                    console.log('imageComment', imageComment)
                                 }else{
                                     alert('Vui lòng đăng nhập')
                                 }
