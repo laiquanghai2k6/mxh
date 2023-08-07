@@ -20,9 +20,9 @@ const FinishModal: React.FC<FinishModalProps> = (props) => {
     var wrongAnswer = [];
     for (var i = 1; i <= currentCourse?.question; i++) {
         if (currentCourse?.answer[i - 1] == userAnswer[i]) {
-            correctAnswer?.push(userAnswer[i])
+            correctAnswer[i] = userAnswer[i]
         } else {
-            wrongAnswer.push(userAnswer[i])
+            wrongAnswer[i]=userAnswer[i]
         }
     
     }
@@ -33,6 +33,13 @@ const FinishModal: React.FC<FinishModalProps> = (props) => {
             open: false
         }))
     }
+    // @ts-ignore: Object is possibly 'null'.
+
+    console.log('correctAnswer:',correctAnswer)
+    // @ts-ignore: Object is possibly 'null'.
+
+    console.log('wrongAnswer:',wrongAnswer)
+
     return (
         <Modal isOpen={modalState.open} onClose={handleClose} >
             <ModalOverlay />
@@ -53,7 +60,7 @@ const FinishModal: React.FC<FinishModalProps> = (props) => {
                     pb={6}
 
                 >
-                    <Text>Bạn đã đúng {correctAnswer.length} / {currentCourse?.question} câu </Text>
+                    <Text>Bạn đã đúng {correctAnswer.length-1} / {currentCourse?.question} câu </Text>
 
                     <div>
                         {wrongAnswer.length > 0 ? 
@@ -64,7 +71,7 @@ const FinishModal: React.FC<FinishModalProps> = (props) => {
                                 wrongAnswer.map((wrong,index)=>{
                                     var convertWrong
                                     var convertCorrect
-
+                                    console.log(index,',',wrong)
                                     switch (wrong) {
                                         case 1:
                                             convertWrong = "A"
@@ -83,7 +90,7 @@ const FinishModal: React.FC<FinishModalProps> = (props) => {
                                             break;
                                     }
                                     // @ts-ignore: Object is possibly 'null'.
-                                    switch (currentCourse.answer[index]) {
+                                    switch (currentCourse.answer[index-1]) {
                                         case 1:
                                             convertCorrect = "A"
                                             break;
@@ -100,15 +107,21 @@ const FinishModal: React.FC<FinishModalProps> = (props) => {
                                         default:
                                             break;
                                     }
-
-                                   return (
-                                    <Flex
-                                    display='flex'
-                                    flexDirection='row' key={index}
-                                    >
-                                        <Text>Câu {index+1}: Bạn chọn đáp án {convertWrong}, Đáp án đúng là {convertCorrect}</Text>
-                                    </Flex>
-                                )}
+                                    if(wrong){
+                                        return (
+                                    
+                                            <Flex
+                                            display='flex'
+                                            flexDirection='row' key={index}
+                                            >
+                                                <Text>Câu {index}: Bạn chọn đáp án {convertWrong}, Đáp án đúng là {convertCorrect}</Text>
+                                            </Flex>
+        
+                                            
+                                        )
+                                    }
+                                  
+                            }
                                 )}
                                
                                 

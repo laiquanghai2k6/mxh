@@ -54,8 +54,8 @@ const CourseId: React.FC<CourseIdProps> = () => {
                     <Image
                         // boxSize='auto'
                         height='80vh'
-
-
+                        // ml={5}
+                        // mr={5}
 
                         src={currentCourse?.image[indexImage]}
                     />

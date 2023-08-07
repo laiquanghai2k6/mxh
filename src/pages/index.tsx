@@ -423,6 +423,7 @@ export default function Home() {
                 // pb={2}
                 color='white'
                 cursor='pointer'
+                justify='space-between'
                 _hover={{
                   bg: 'green.500',
                   border: '1px solid',
@@ -448,20 +449,21 @@ export default function Home() {
                     }
                   }}
                   style={{
-                    justifyContent: 'center',
+                    // justifyContent: 'center',
                     alignItems: 'center',
                     display: 'flex',
-                    flexDirection: 'row',
+                    // flexDirection: 'row',
+                    
                     justifyItems: 'center',
                     paddingTop: 5,
                     paddingBottom: 5
                   }}
                 >
 
-                  <Flex ml={5} width='60%'  >ID: {course.data().id} Tên:  {course.data().title}</Flex>
+                  <Flex ml={5} width='500px'  >ID: {course.data().id} Tên:  {course.data().title}</Flex>
 
-                  <Flex ml={5}  >Số lượt làm: {course.data().view}</Flex>
-                  <Flex ml={10}>Tạo bởi {course.data().author} vào ngày {course.data().date}</Flex>
+                  <Flex ml={15} width='200px' >Số lượt làm: {course.data().view}</Flex>
+                  <Flex ml={5} width='40%'>Tạo bởi {course.data().author} vào ngày {course.data().date}</Flex>
 
 
                 </Link>
