@@ -13,7 +13,7 @@ type FinishModalProps = {
 const FinishModal: React.FC<FinishModalProps> = (props) => {
     const { currentCourse, userAnswer } = props
     const [modalState, setModalState] = useRecoilState(finishModalState)
-    const [renderWrongAnswer,setRenderWrongAnswer] = useState(false)
+    var nCorrect = 0;
     // @ts-ignore: Object is possibly 'null'.
     var correctAnswer = [];
     // @ts-ignore: Object is possibly 'null'.
@@ -21,6 +21,7 @@ const FinishModal: React.FC<FinishModalProps> = (props) => {
     for (var i = 1; i <= currentCourse?.question; i++) {
         if (currentCourse?.answer[i - 1] == userAnswer[i]) {
             correctAnswer[i] = userAnswer[i]
+            nCorrect +=1
         } else {
             wrongAnswer[i]=userAnswer[i]
         }
@@ -60,7 +61,7 @@ const FinishModal: React.FC<FinishModalProps> = (props) => {
                     pb={6}
 
                 >
-                    <Text>Bạn đã đúng {correctAnswer.length-1} / {currentCourse?.question} câu </Text>
+                    <Text>Bạn đã đúng {nCorrect} / {currentCourse?.question} câu </Text>
 
                     <div>
                         {wrongAnswer.length > 0 ? 
