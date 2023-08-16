@@ -18,7 +18,7 @@ const FinishModal: React.FC<FinishModalProps> = (props) => {
     var correctAnswer = [];
     // @ts-ignore: Object is possibly 'null'.
     var wrongAnswer = [];
-    for (var i = 1; i <= currentCourse?.question; i++) {
+    for (var i = 1; i <= currentCourse?.questionR-currentCourse?.questionL+1; i++) {
         if (currentCourse?.answer[i - 1] == userAnswer[i]) {
             correctAnswer[i] = userAnswer[i]
             nCorrect +=1
@@ -61,7 +61,7 @@ const FinishModal: React.FC<FinishModalProps> = (props) => {
                     pb={6}
 
                 >
-                    <Text>Bạn đã đúng {nCorrect} / {currentCourse?.question} câu </Text>
+                    <Text>Bạn đã đúng {nCorrect} / {currentCourse?.questionR-currentCourse?.questionL+1} câu </Text>
 
                     <div>
                         {wrongAnswer.length > 0 ? 
@@ -115,7 +115,7 @@ const FinishModal: React.FC<FinishModalProps> = (props) => {
                                             display='flex'
                                             flexDirection='row' key={index}
                                             >
-                                                <Text>Câu {index}: Bạn chọn đáp án {convertWrong}, Đáp án đúng là {convertCorrect}</Text>
+                                                <Text>Câu {index+currentCourse?.questionL-1}: Bạn chọn đáp án {convertWrong}, Đáp án đúng là {convertCorrect}</Text>
                                             </Flex>
         
                                             

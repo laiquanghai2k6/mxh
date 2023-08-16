@@ -48,8 +48,20 @@ export default function Home() {
 
   const [post, setPost] = useRecoilState(PostState)
   // @ts-ignore: Object is possibly 'null'.
-  const courseValue = courseValues?.docs.filter(course => course.data().title.toLowerCase().includes(courseFilter.text))
-  // @ts-ignore: Object is possibly 'null'.
+  const courseValue = courseValues?.docs.filter(course => 
+   ( course.data().title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd').includes(courseFilter.text.toLowerCase())
+  || course.data().title.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd').includes(courseFilter.text.toLowerCase())
+    ||  course.data().title.toLowerCase().includes(courseFilter.text.toLowerCase()) 
+    || course.data().title.includes(courseFilter.text.toLowerCase()) 
+    ||course.data().title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(courseFilter.text.toLowerCase())
+    ||course.data().title.toLowerCase().normalize('NFD').replace(/[đĐ]/g, 'd').includes(courseFilter.text.toLowerCase())
+    // ||course.data().title.normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(courseFilter.text.toLowerCase())
+    // ||course.data().title.normalize('NFD').replace(/[đĐ]/g, 'd').includes(courseFilter.text.toLowerCase())
+
+
+    )
+  )
+    // @ts-ignore: Object is possibly 'null'.
   const onChangeFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCourseFilter(prev => ({
       ...prev,

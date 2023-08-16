@@ -35,17 +35,23 @@ const CourseModal: React.FC<CourseModalProps> = () => {
     const [fakeArray, setFakeArray] = useState([])
     const [fakeArrayQuestion, setFakeArrayQuestion] = useState([])
     const [nImage, setNImage] = useState(0)
-    const [nQuestion, setNQuestion] = useState(0)
+    const [nLeftQuestion, setNLeftQuestion] = useState(0)
+    const [nRightQuestion, setNRightQuestion] = useState(0)
+
     const [isSubmit, setIsSubmit] = useState(false)
 
     const onChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
        // @ts-ignore: Object is possibly 'null'.
         setNImage(event.target.value)
     }
-    const onChangeQuestion = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const onChangeLQuestion = (event: React.ChangeEvent<HTMLInputElement>) => {
      // @ts-ignore: Object is possibly 'null'.
-        setNQuestion(event.target.value)
+     setNLeftQuestion(event.target.value)
     }
+    const onChangeRQuestion = (event: React.ChangeEvent<HTMLInputElement>) => {
+        // @ts-ignore: Object is possibly 'null'.
+        setNRightQuestion(event.target.value)
+       }
     const handleClose = () => {
         setCourseCreateState((prev) => ({
             ...prev,
@@ -63,6 +69,7 @@ const CourseModal: React.FC<CourseModalProps> = () => {
             [event.target.name]: event.target.value
         }))
     }
+    console.log('courseAnswerCreate',courseAnswerCreate)
 
 
     return (
@@ -104,19 +111,36 @@ const CourseModal: React.FC<CourseModalProps> = () => {
                                 required
                                 type='number'
                             />
+                            <Text mt={10}>Số câu hỏi muốn tạo:</Text>
+                            <Flex display='flex' flexDirection='column' ml={6}>
+                            <Text width='150px'>Từ câu</Text>
                             <Input
-                                mt={10}
+                               
                                 title='numberQuestion'
-                                onChange={onChangeQuestion}
+                                onChange={onChangeLQuestion}
                                 required
-                                placeholder='Chọn số câu hỏi muốn tạo'
+                                placeholder=''
 
                             />
+                            <Text width='150px'>Đến câu</Text>
+
+                              <Input
+                               
+                               title='numberQuestion'
+                               onChange={onChangeRQuestion}
+                               required
+                               placeholder=''
+
+                           />
+                            </Flex>
                             <Button
                                 mt={10}
                                 type='submit'
                                 width='100%'
                                 onClick={() => {
+                                    if(nLeftQuestion>nRightQuestion){
+                                        alert('Vui lòng chọn số câu hỏi muốn tạo hợp lệ')
+                                    }else{
                                     setIsSubmit(true)
 
                                     for (var i = 0; i < nImage; i++) {
@@ -124,10 +148,11 @@ const CourseModal: React.FC<CourseModalProps> = () => {
                                         fakeArray[i] = i
 
                                     }
-                                    for (var i = 0; i < nQuestion; i++) {
+                                    for (var i = 0; i < nRightQuestion-nLeftQuestion+1; i++) {
                                         // @ts-ignore: Object is possibly 'null'.
                                         fakeArrayQuestion[i] = i
                                     }
+                                }
 
                                 }}
                             >
@@ -192,13 +217,16 @@ const CourseModal: React.FC<CourseModalProps> = () => {
                                     </Flex>
                                 )
                             })}
-                            <Text mt={5} fontWeight={799}>Chọn đáp án cho {nQuestion} câu</Text>
+                            <Text mt={5} fontWeight={799}>Chọn đáp án cho {nRightQuestion-nLeftQuestion+1} câu</Text>
                             {fakeArrayQuestion.map((fakeArray, idx) => {
                                 var s = ""
+
                                 return (
                                     <Flex key={idx} mt={4} flexDirection='row' display='flex'>
                                         <Text fontSize={15}>Câu</Text>
-                                        <Text fontSize={15}>{`${s} ${idx + 1}`}</Text>
+                                         {/* @ts-ignore: Object is possibly 'null'. */}
+                                        
+                                        <Text fontSize={15}>{`${s} ${idx + parseInt(nLeftQuestion,10)}`}</Text>
                                         <form id={`choices${idx}`} style={{
                                             width: '100%',
                                             display: 'flex',
@@ -246,32 +274,43 @@ const CourseModal: React.FC<CourseModalProps> = () => {
                                         }
 
                                     }
-                                    // @ts-ignore: Object is possibly 'null'.
+                             
+                                  // @ts-ignore: Object is possibly 'null'.
                                     await setDoc(doc(db,'course',`courseid${courseValue?.docs.length + 1}`),{
                                         author:user?.email?.split("@")[0],
                                         date:day,
                                         // @ts-ignore: Object is possibly 'null'.
                                         id:courseValue?.docs.length + 1,
                                         // @ts-ignore: Object is possibly 'null'.
-                                        question:parseInt(nQuestion,10),
+
+                                        questionL:parseInt(nLeftQuestion,10),
+                                        // @ts-ignore: Object is possibly 'null'.
+
+                                        questionR:parseInt(nRightQuestion,10),
+
                                         title:inputTitle.text,
                                         view:0,
-                                        image: arrayUnion(courseImageCreate[0]),
-                                        answer:arrayUnion(courseAnswerCreate[0])
+                                        image: courseImageCreate,
+                                        answer:courseAnswerCreate
 
-                                    })
-                                    for(var d = 1 ; d < courseImageCreate.length;d++){
-                                        // @ts-ignore: Object is possibly 'null'.
-                                         updateDoc(doc(db,'course',`courseid${courseValue?.docs.length + 1}`),{
-                                            image: arrayUnion(courseImageCreate[d])
-                                        })
-                                    }
-                                    for(var f = 1 ; f < courseAnswerCreate.length;f++){
-                                        // @ts-ignore: Object is possibly 'null'.
-                                         updateDoc(doc(db,'course',`courseid${courseValue?.docs.length + 1}`),{
-                                            answer: arrayUnion(courseAnswerCreate[f])
-                                        })
-                                    }
+                                     })
+                                  //   for(var f = 1 ; f < courseAnswerCreate.length;f++){
+                                       
+                                        //    @ts-ignore: Object is possibly 'null'.
+                                     //        updateDoc(doc(db,'course',`courseid19`),{
+                                        //    @ts-ignore: Object is possibly 'null'.
+
+                                            //    answer: arrayUnion(8)
+                                                // answer: arrayUnion(3)
+                                        //    })
+                                      //  }
+                                    // for(var d = 1 ; d < courseImageCreate.length;d++){
+                                    //     // @ts-ignore: Object is possibly 'null'.
+                                    //      updateDoc(doc(db,'course',`courseid${courseValue?.docs.length + 1}`),{
+                                    //         image: arrayUnion(courseImageCreate[d])
+                                    //     })
+                                    // }
+                                   
                                     setCourseCreateState((prev) => ({
                                         ...prev,
                                         open: false

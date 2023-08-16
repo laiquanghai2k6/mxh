@@ -75,7 +75,7 @@ const CourseId: React.FC<CourseIdProps> = () => {
                     )}
                 </Flex>
                 <FinishModal currentCourse={currentCourse} userAnswer={answer} />
-                <Text ml={12}>Câu {indexAnswer + 1}</Text>
+                <Text ml={12}>Câu {indexAnswer + parseInt(currentCourse?.questionL)}</Text>
                 <Flex
 
 
@@ -132,7 +132,7 @@ const CourseId: React.FC<CourseIdProps> = () => {
                             bg: 'gray.300'
                         }}
                         onClick={() => {
-                            if (indexAnswer <= currentCourse?.question - 2) {
+                            if (indexAnswer+currentCourse?.questionL <= currentCourse?.questionR - 1) {
                                 var s
                                 var choices = document.getElementById('choices')
                                 // @ts-ignore: Object is possibly 'null'.
@@ -172,7 +172,7 @@ const CourseId: React.FC<CourseIdProps> = () => {
                         }
                         
                     }}>Check</Button> */}
-                    {indexAnswer == currentCourse?.question - 1 && (
+                    {indexAnswer+currentCourse?.questionL == currentCourse?.questionR  && (
                         <Button
                             onClick={() => {
                                
