@@ -56,6 +56,7 @@ const PostId: React.FC<ComProps> = () => {
     //     setImage(url)
 
     // })
+    const currentIdPostUser = valueUser?.docs.find(userPost => userPost.data().email.split("@")[0] == currentPost?.author)
 
 
 
@@ -103,7 +104,7 @@ const PostId: React.FC<ComProps> = () => {
                         ml={100}
                         borderRadius={10}
                     >
-                        <Image src='https://th.bing.com/th/id/OIP.HkxDftcu901JEpHbQHXpiQHaH-?pid=ImgDet&rs=1'
+                        <Image src={currentIdPostUser?.data().image ?currentIdPostUser?.data().image: 'https://www.pngarts.com/files/10/Default-Profile-Picture-Transparent-Image.png'}
                             height='40px'
                             marginLeft='10px'
                             marginTop='5px'
@@ -267,7 +268,9 @@ const PostId: React.FC<ComProps> = () => {
                         mt={5}
                     >
                         {// @ts-ignore: Object is possibly 'null'.
-                        currentPost?.comment.map((cmt, id) => (
+                        currentPost?.comment.map((cmt, id) => {
+                            const currentUserCmt = valueUser?.docs.find(userCmt => userCmt.data().email.split("@")[0] == cmt?.user)
+                            return (
                             <Flex
                                 key={id}
                                 bg='white'
@@ -283,7 +286,7 @@ const PostId: React.FC<ComProps> = () => {
                                     <Flex display='flex'
                                         flexDirection='row'
                                     >
-                                        <Image src='https://th.bing.com/th/id/OIP.Rvw-Uet9Xr3073Ek6uhB5AHaHa?pid=ImgDet&rs=1' height='30px'
+                                        <Image src={currentUserCmt?.data().image ? currentUserCmt?.data().image  :'https://www.pngarts.com/files/10/Default-Profile-Picture-Transparent-Image.png'  }height='30px'
                                             borderRadius='500px'
 
                                         />
@@ -309,7 +312,7 @@ const PostId: React.FC<ComProps> = () => {
 
                             </Flex>
 
-                        ))}
+                        )})}
                     </Flex>
 
 

@@ -123,7 +123,7 @@ export default function Home() {
               <Flex style={{ flex: 3, display: 'flex', flexDirection: 'column' }}>
 
                 {value.docs.map((doc, id) => {
-                  console.log(valueUser?.docs[4].data().email.split("@")[0])
+                  
                   // console.log(value?.docs[0].data().author)
 
                   const currentUserPost = valueUser?.docs.find(userPost => userPost.data().email.split("@")[0] == doc.data().author)

@@ -24,10 +24,10 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
         });
     const currentUserDoc = valueUser?.docs.find((doc) => doc.data().email == user?.email)
     const [textProfile, setTextProfile] = useState({
-        name: '',
-        born: '',
-        live: '',
-        image: '',
+        name: currentUserDoc?.data().name,
+        born: currentUserDoc?.data().born,
+        live: currentUserDoc?.data().live,
+        image: currentUserDoc?.data().image,
     })
     const handleClose = () => {
         setModalState((prev) => ({
@@ -42,7 +42,9 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
         }))
 
 
+        
     }
+    console.log('upTextProfile:',textProfile.name)
 
 
     return (
@@ -61,7 +63,7 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
                                 {isChinhSua ?
                                     (
                                         <div>
-                                            <label htmlFor="filePicker" style={{ fontSize: '10px', width: '100px' }}>
+                                            <label htmlFor="filePickerss" style={{ fontSize: '10px', width: '100px' }}>
                                                 <Image
                                                     src={currentUserDoc?.data().image ? currentUserDoc?.data().image : 'https://www.pngarts.com/files/10/Default-Profile-Picture-Transparent-Image.png'}
                                                     boxSize='15vh'
@@ -69,10 +71,12 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
 
                                                 />
                                             </label>
-                                            <input id="filePicker" style={{ visibility: "hidden", width: '1px' }} type={"file"}
-
+                                            <input id="filePickerss" style={{ visibility: "hidden", width: '1px' }} type={"file"}
+                                                
                                                 onChange={({ target }) => {
+                                                    console.log('ss')
                                                     if (target.files && user) {
+                                                        // console.log('ss')
                                                         const file = target.files[0];
 
                                                         const imageUserRef = ref(storage, `images/userid${currentUserDoc?.data().id}`)
@@ -80,10 +84,12 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
                                                             console.log('uploaded')
                                                         }).then(() => {
                                                             getDownloadURL(imageUserRef).then((url) => {
+                                                            
                                                                 setTextProfile(prev => ({
                                                                     ...prev,
                                                                     image: url
                                                                 }))
+                                                        
                                                                 updateDoc(doc(db, 'user', `userid${currentUserDoc?.data().id}`), {
                                                                      image: url,
                                                                     // born: textProfile.born,
@@ -120,7 +126,7 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
                                             ml={5}
                                             name='name'
                                             onChange={onChange}
-                                        // value={currentUserDoc?.data().name ? currentUserDoc?.data().name : textProfile.name}
+                                        // value={currentUserDoc?.data().name}
                                         />
                                     </div>
                                 ) : (
@@ -173,22 +179,18 @@ const ProfileModal: React.FC<ProfileModalProps> = () => {
                             <Flex justify='center' mt={5}>
                                 {isChinhSua ? (
                                     <Button onClick={() => {
+                                        console.log('textProfile.born',textProfile.born)
                                         updateDoc(doc(db, 'user', `userid${currentUserDoc?.data().id}`), {
                                             // image: textProfile.image,
-                                            born: textProfile.born,
-                                            name: textProfile.name,
-                                            live: textProfile.live
+                                            born: textProfile.born ? textProfile.born : currentUserDoc?.data().born,
+                                            name: textProfile.name ? textProfile.name : currentUserDoc?.data().name,
+                                            live: textProfile.live ? textProfile.live : currentUserDoc?.data().live
                                         })
-                                        // setTextProfile({
-                                        //     name: '',
-                                        //     born: '',
-                                        //     live: '',
-                                        //     image: currentUserDoc?.data().image,
-                                        // })
-                                        setModalState((prev) => ({
-                                            ...prev,
-                                            open: false
-                                        }))
+                                  
+                                        // setModalState((prev) => ({
+                                        //     ...prev,
+                                        //     open: false
+                                        // }))
                                         setIsChinhSua(false)
                                     }}>Cập nhật</Button>
 
