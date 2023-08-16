@@ -48,27 +48,27 @@ export default function Home() {
 
   const [post, setPost] = useRecoilState(PostState)
   // @ts-ignore: Object is possibly 'null'.
-  const courseValue = courseValues?.docs.filter(course => 
-   ( course.data().title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd').includes(courseFilter.text.toLowerCase())
-  || course.data().title.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd').includes(courseFilter.text.toLowerCase())
-    ||  course.data().title.toLowerCase().includes(courseFilter.text.toLowerCase()) 
-    || course.data().title.includes(courseFilter.text.toLowerCase()) 
-    ||course.data().title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(courseFilter.text.toLowerCase())
-    ||course.data().title.toLowerCase().normalize('NFD').replace(/[đĐ]/g, 'd').includes(courseFilter.text.toLowerCase())
+  const courseValue = courseValues?.docs.filter(course =>
+  (course.data().title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd').includes(courseFilter.text.toLowerCase())
+    || course.data().title.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd').includes(courseFilter.text.toLowerCase())
+    || course.data().title.toLowerCase().includes(courseFilter.text.toLowerCase())
+    || course.data().title.includes(courseFilter.text.toLowerCase())
+    || course.data().title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(courseFilter.text.toLowerCase())
+    || course.data().title.toLowerCase().normalize('NFD').replace(/[đĐ]/g, 'd').includes(courseFilter.text.toLowerCase())
     // ||course.data().title.normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(courseFilter.text.toLowerCase())
     // ||course.data().title.normalize('NFD').replace(/[đĐ]/g, 'd').includes(courseFilter.text.toLowerCase())
 
 
-    )
   )
-    // @ts-ignore: Object is possibly 'null'.
+  )
+  // @ts-ignore: Object is possibly 'null'.
   const onChangeFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCourseFilter(prev => ({
       ...prev,
       [event.target.name]: event.target.value
     }))
-  // @ts-ignore: Object is possibly 'null'.
-    
+    // @ts-ignore: Object is possibly 'null'.
+
     // console.log('courseValues',courseValue[1].data())
 
 
@@ -123,6 +123,11 @@ export default function Home() {
               <Flex style={{ flex: 3, display: 'flex', flexDirection: 'column' }}>
 
                 {value.docs.map((doc, id) => {
+                  console.log(valueUser?.docs[4].data().email.split("@")[0])
+                  // console.log(value?.docs[0].data().author)
+
+                  const currentUserPost = valueUser?.docs.find(userPost => userPost.data().email.split("@")[0] == doc.data().author)
+                  console.log('currentUserPost',currentUserPost) 
                   return (
 
                     <Flex key={id}
@@ -138,8 +143,8 @@ export default function Home() {
                         bg: 'gray.100'
                       }}
                     >
-                      <Image src='https://th.bing.com/th/id/OIP.HkxDftcu901JEpHbQHXpiQHaH-?pid=ImgDet&rs=1'
-                        height='40px'
+                      <Image src={currentUserPost?.data().image ? currentUserPost?.data().image : 'https://www.pngarts.com/files/10/Default-Profile-Picture-Transparent-Image.png'}
+                        boxSize={10}
                         marginLeft='10px'
                         marginTop='5px'
                         borderRadius='20'
@@ -383,14 +388,14 @@ export default function Home() {
             </InputGroup>
           </Flex>
           <div
-          
-          style={{
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            alignSelf: 'center',
-            display: 'flex',
-          }}
+
+            style={{
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              alignSelf: 'center',
+              display: 'flex',
+            }}
           >
             <Button
               mt={10}
@@ -465,7 +470,7 @@ export default function Home() {
                     alignItems: 'center',
                     display: 'flex',
                     // flexDirection: 'row',
-                    
+
                     justifyItems: 'center',
                     paddingTop: 5,
                     paddingBottom: 5
