@@ -108,7 +108,7 @@ const PostModal: React.FC<PostModalProps> = () => {
                             resize='both'
                             onChange={onChange}
                             value={inputPost.text}
-                            placeholder='Nhập bình luận'
+                            placeholder='Nhập nội dung'
                             name='text'
                         />
                         {imagePost && <Image
