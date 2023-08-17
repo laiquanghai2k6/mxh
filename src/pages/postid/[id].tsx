@@ -1,6 +1,6 @@
 import { listModalState } from '@/src/atoms/authModalAtom';
 import { auth, db, storage } from '@/src/firebase/clientApp';
-import { Flex, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, Text } from '@chakra-ui/react';
+import { Flex, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, Text, background } from '@chakra-ui/react';
 import { arrayUnion, collection, doc, orderBy, query, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { useRouter } from 'next/router';
@@ -30,7 +30,7 @@ const PostId: React.FC<ComProps> = () => {
     const currentPost = value?.docs.find(doc => doc.data().id == route.query.id)?.data()
     const postRef = doc(db, 'post', 'postid' + currentPost?.id);
     const [listModalStates, setListModalState] = useState(false)
-    const [listIndex,setListIndex] = useState(0)
+    const [listIndex, setListIndex] = useState(0)
 
 
     const [imageCommentUpload, setImageCommentUpload] = useState<File>()
@@ -104,7 +104,7 @@ const PostId: React.FC<ComProps> = () => {
                         ml={100}
                         borderRadius={10}
                     >
-                        <Image src={currentIdPostUser?.data().image ?currentIdPostUser?.data().image: 'https://www.pngarts.com/files/10/Default-Profile-Picture-Transparent-Image.png'}
+                        <Image src={currentIdPostUser?.data().image ? currentIdPostUser?.data().image : 'https://www.pngarts.com/files/10/Default-Profile-Picture-Transparent-Image.png'}
                             height='40px'
                             marginLeft='10px'
                             marginTop='5px'
@@ -132,9 +132,24 @@ const PostId: React.FC<ComProps> = () => {
 
                                 <div>{currentPost?.content}</div>
                                 {currentPost?.imagePost != '' ? (
-                                    <Image src={currentPost?.imagePost} boxSize='300px'
-                                    />
-
+                                    <Flex 
+                                    position='relative'
+                                    overflow='hidden'
+                                    boxSize='90vh'
+                                    
+                                    >
+                                        <Image src={currentPost?.imagePost} 
+                                        // objectFit='cover'
+                                        // filter='grayscale(100%)'
+                                        // transition='all 0.6s'
+                                        // _hover={{
+                                        //    filter:'grayscale(20%)',
+                                        //    transform:'scale(1.2)',
+                                        //    transformOrigin:'10% 50%'
+                                        
+                                        // }}
+                                        />
+                                    </Flex>
                                 ) : (
                                     <></>
                                 )}
@@ -161,7 +176,7 @@ const PostId: React.FC<ComProps> = () => {
                                     onClick={() => {
                                         if (user) {
                                             updateDoc(postRef, { like: currentPost?.like + 1 });
-                                        }else{
+                                        } else {
                                             alert('Vui lòng đăng nhập')
                                         }
                                     }}
@@ -195,11 +210,11 @@ const PostId: React.FC<ComProps> = () => {
 
                                 if (!user) {
                                     alert('Vui lòng đăng nhập')
-                                } else if(!imageComment && user){
+                                } else if (!imageComment && user) {
                                     updateDoc(postRef, { comment: arrayUnion({ user: user?.email?.split("@")[0], text: inputComment.text, image: '' }) })
 
                                 }
-                                else{
+                                else {
                                     // @ts-ignore: Object is possibly 'null'.
                                     uploadBytes(commentRefs, imageCommentUpload).then((snapshot) => {
                                         console.log('uploaded')
@@ -243,12 +258,12 @@ const PostId: React.FC<ComProps> = () => {
                                     const file = target.files[0];
                                     setImageComment(URL.createObjectURL(file))
                                     setImageCommentUpload(file)
-                                }else{
+                                } else {
                                     alert('Vui lòng đăng nhập')
                                 }
                             }}
                         ></input>
-                       
+
 
                     </Flex>
                     {imageComment && (
@@ -268,51 +283,53 @@ const PostId: React.FC<ComProps> = () => {
                         mt={5}
                     >
                         {// @ts-ignore: Object is possibly 'null'.
-                        currentPost?.comment.map((cmt, id) => {
-                            const currentUserCmt = valueUser?.docs.find(userCmt => userCmt.data().email.split("@")[0] == cmt?.user)
-                            return (
-                            <Flex
-                                key={id}
-                                bg='white'
-                                mt={5}
-                                borderRadius='20px'
-                                width='70%'
-                                padding='10px 15px'
-                                display='flex'
-                            >
-                                <Flex
-                                    flexDirection='column'
-                                >
-                                    <Flex display='flex'
-                                        flexDirection='row'
-                                    >
-                                        <Image src={currentUserCmt?.data().image ? currentUserCmt?.data().image  :'https://www.pngarts.com/files/10/Default-Profile-Picture-Transparent-Image.png'  }height='30px'
-                                            borderRadius='500px'
-
-                                        />
-                                        <Flex
-                                            ml={3}
-                                            fontWeight={600}
-                                        >
-                                            {cmt.user}
-                                        </Flex>
-                                    </Flex>
+                            currentPost?.comment.map((cmt, id) => {
+                                const currentUserCmt = valueUser?.docs.find(userCmt => userCmt.data().email.split("@")[0] == cmt?.user)
+                                return (
                                     <Flex
-                                        ml={35}
-                                    >{cmt.text}</Flex>
-                                    {cmt?.image?.length > 5 ? (
-                                        <Image
-                                            boxSize='300px'
-                                            src={cmt.image}
-                                        />
-                                    ) : (
-                                        <></>
-                                    )}
-                                </Flex>
+                                        key={id}
+                                        bg='white'
+                                        mt={5}
+                                        borderRadius='20px'
+                                        width='70%'
+                                        padding='10px 15px'
+                                        display='flex'
+                                    >
+                                        <Flex
+                                            flexDirection='column'
+                                        >
+                                            <Flex display='flex'
+                                                flexDirection='row'
+                                            >
+                                                <Image src={currentUserCmt?.data().image ? currentUserCmt?.data().image : 'https://www.pngarts.com/files/10/Default-Profile-Picture-Transparent-Image.png'} height='30px'
+                                                    borderRadius='500px'
 
-                            </Flex>
+                                                />
+                                                <Flex
+                                                    ml={3}
+                                                    fontWeight={600}
+                                                >
+                                                    {cmt.user}
+                                                </Flex>
+                                            </Flex>
+                                            <Flex
+                                                ml={35}
+                                            >{cmt.text}</Flex>
+                                            {cmt?.image?.length > 5 ? (
+                                                <Image
+                                                    boxSize='0px'
+                                                    mt={5}
+                                                    src={cmt.image}
+                                                />
+                                            ) : (
+                                                <></>
+                                            )}
+                                        </Flex>
 
-                        )})}
+                                    </Flex>
+
+                                )
+                            })}
                     </Flex>
 
 
@@ -323,89 +340,89 @@ const PostId: React.FC<ComProps> = () => {
 
                 >
                     {valueUser?.docs.map((user, id) => (
-                     <Flex key={id} display='flex' flexDirection='row' bg='white'
-                     mt={3} mb={1} borderRadius='10px' padding='5px'
-                     cursor='pointer' align='center'
-                     ml={2}
-                     mr={2}
-                     _hover={{
-                       bg: 'gray.100'
-                     }}
-                     onClick={() => {
-                       setListModalState(true)
-                       setListIndex(id)
-                     }}
-                   >
-                     <div>
-                     {listModalState && (
-                       <Modal isOpen={listModalStates} onClose={() => { setListModalState(false) }} >
-                         <ModalContent>
-                           <ModalHeader textAlign='center'
-   
-   
-                           >
-                             
-                             <Flex display='flex' flexDirection='column' >
-                                 <Flex justify='center'>
-                                 <Image
-                                   src={valueUser.docs[listIndex]?.data().image ? valueUser.docs[listIndex]?.data().image : 'https://www.pngarts.com/files/10/Default-Profile-Picture-Transparent-Image.png'}
-                                   boxSize='15vh'
-                                   borderRadius={50}
-                                 />
-                                 </Flex>
-                                 <Flex fontWeight='700' justify='center' mt={5} display='flex' flexDirection='row' fontSize={16}>
-   
-                                   <Text >Tên: {valueUser.docs[listIndex]?.data().name ? valueUser.docs[listIndex]?.data().name : '(Chưa có)'} </Text>
-   
-                                 </Flex>
-                                 <Flex fontWeight='700' justify='center' mt={5} fontSize={16}>
-   
-   
-                                   <Text>Năm sinh: {valueUser.docs[listIndex]?.data().born ? valueUser.docs[listIndex]?.data().born : '(Chưa có)'} </Text>
-   
-                                 </Flex>
-                                 <Flex fontWeight='700' justify='center' mt={5} fontSize={16}>
-   
-                                   <Text>Nơi ở: {valueUser.docs[listIndex]?.data().live ? valueUser.docs[listIndex]?.data().live : '(Chưa có)'} </Text>
-   
-                                 </Flex>
-   
-   
-                               </Flex>
-   
-                           </ModalHeader>
-                           <ModalCloseButton />
-                           <ModalBody
-                               display='flex'
-                               flexDirection='column'
-                               alignItems='center'
-                               justifyContent='center'
-                               pb={6}
-                           >
-                             
-   
-   
-                             
-   
-                           </ModalBody>
-                         </ModalContent>
-                       </Modal>
-                     )}
-                     </div>
-   
-                     <Image height='35px' width='35px' src={user.data().image ? user.data().image : 'https://www.pngarts.com/files/10/Default-Profile-Picture-Transparent-Image.png'}
-                       borderRadius='100px'
-   
-                     />
-                     <Flex ml={3}>{user.data().email.split("@")[0]}</Flex>
-                     <Image
-                       src='https://th.bing.com/th/id/R.13284e9be62bd8ff1ad9afac1f1fbe60?rik=5wa7bTdun3cFXQ&riu=http%3a%2f%2fgetwallpapers.com%2fwallpaper%2ffull%2f1%2ff%2fa%2f787954-green-background-wallpaper-2560x1440-cell-phone.jpg&ehk=NlHlCXUgO4xLEvkAsU9G7E4%2fgSbdaaasgeToXQGiNhI%3d&risl=&pid=ImgRaw&r=0'
-                       height='10px'
-                       width='10px'
-                       marginLeft='50px'
-                       borderRadius='100px'
-                     />
-                   </Flex>
+                        <Flex key={id} display='flex' flexDirection='row' bg='white'
+                            mt={3} mb={1} borderRadius='10px' padding='5px'
+                            cursor='pointer' align='center'
+                            ml={2}
+                            mr={2}
+                            _hover={{
+                                bg: 'gray.100'
+                            }}
+                            onClick={() => {
+                                setListModalState(true)
+                                setListIndex(id)
+                            }}
+                        >
+                            <div>
+                                {listModalState && (
+                                    <Modal isOpen={listModalStates} onClose={() => { setListModalState(false) }} >
+                                        <ModalContent>
+                                            <ModalHeader textAlign='center'
+
+
+                                            >
+
+                                                <Flex display='flex' flexDirection='column' >
+                                                    <Flex justify='center'>
+                                                        <Image
+                                                            src={valueUser.docs[listIndex]?.data().image ? valueUser.docs[listIndex]?.data().image : 'https://www.pngarts.com/files/10/Default-Profile-Picture-Transparent-Image.png'}
+                                                            boxSize='15vh'
+                                                            borderRadius={50}
+                                                        />
+                                                    </Flex>
+                                                    <Flex fontWeight='700' justify='center' mt={5} display='flex' flexDirection='row' fontSize={16}>
+
+                                                        <Text >Tên: {valueUser.docs[listIndex]?.data().name ? valueUser.docs[listIndex]?.data().name : '(Chưa có)'} </Text>
+
+                                                    </Flex>
+                                                    <Flex fontWeight='700' justify='center' mt={5} fontSize={16}>
+
+
+                                                        <Text>Năm sinh: {valueUser.docs[listIndex]?.data().born ? valueUser.docs[listIndex]?.data().born : '(Chưa có)'} </Text>
+
+                                                    </Flex>
+                                                    <Flex fontWeight='700' justify='center' mt={5} fontSize={16}>
+
+                                                        <Text>Nơi ở: {valueUser.docs[listIndex]?.data().live ? valueUser.docs[listIndex]?.data().live : '(Chưa có)'} </Text>
+
+                                                    </Flex>
+
+
+                                                </Flex>
+
+                                            </ModalHeader>
+                                            <ModalCloseButton />
+                                            <ModalBody
+                                                display='flex'
+                                                flexDirection='column'
+                                                alignItems='center'
+                                                justifyContent='center'
+                                                pb={6}
+                                            >
+
+
+
+
+
+                                            </ModalBody>
+                                        </ModalContent>
+                                    </Modal>
+                                )}
+                            </div>
+
+                            <Image height='35px' width='35px' src={user.data().image ? user.data().image : 'https://www.pngarts.com/files/10/Default-Profile-Picture-Transparent-Image.png'}
+                                borderRadius='100px'
+
+                            />
+                            <Flex ml={3}>{user.data().email.split("@")[0]}</Flex>
+                            <Image
+                                src='https://th.bing.com/th/id/R.13284e9be62bd8ff1ad9afac1f1fbe60?rik=5wa7bTdun3cFXQ&riu=http%3a%2f%2fgetwallpapers.com%2fwallpaper%2ffull%2f1%2ff%2fa%2f787954-green-background-wallpaper-2560x1440-cell-phone.jpg&ehk=NlHlCXUgO4xLEvkAsU9G7E4%2fgSbdaaasgeToXQGiNhI%3d&risl=&pid=ImgRaw&r=0'
+                                height='10px'
+                                width='10px'
+                                marginLeft='50px'
+                                borderRadius='100px'
+                            />
+                        </Flex>
                     ))}
 
                 </Flex>
