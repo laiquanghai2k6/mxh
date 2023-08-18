@@ -316,11 +316,21 @@ const PostId: React.FC<ComProps> = () => {
                                                 ml={35}
                                             >{cmt.text}</Flex>
                                             {cmt?.image?.length > 5 ? (
+                                                <Flex
+                                                position='relative'
+                                                overflow='hidden'
+                                                maxHeight={200}
+                                                boxSize='80vh'
+                                                >
+
                                                 <Image
-                                                    boxSize='0px'
+                                                   
                                                     mt={5}
+                                                
                                                     src={cmt.image}
                                                 />
+                                                </Flex>
+
                                             ) : (
                                                 <></>
                                             )}
